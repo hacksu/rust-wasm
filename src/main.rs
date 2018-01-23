@@ -1,7 +1,25 @@
 #[macro_use]
 extern crate stdweb;
 
-fn factorial(f: i32) -> i32 {
+#[macro_use]
+extern crate yew;
+
+use yew::html::*;
+
+use stdweb::web::*;
+
+struct State {
+    v: String
+}
+
+enum Msg {
+    Change(String),
+    None
+}
+
+struct Context {}
+
+fn factorial(f: u64) -> u64 {
     if f <= 1 {
         return 1;
     } else {
@@ -10,13 +28,34 @@ fn factorial(f: i32) -> i32 {
 }
 
 
+fn update(_: &mut Context, state: &mut State, msg: Msg) {
+    match msg {
+        Msg::Change(v) => state.v = v,
+        Msg::None => {}
+    }
+}
+
+
+fn view(state: &State) -> Html<Msg> {
+    html! {
+        <div>
+            <input oninput=|e: InputData| Msg::Change(e.value), value=&state.v, />
+            <div>
+            {if let Ok(v) = state.v.parse::<u64>() {factorial(v).to_string()} else {String::from("")}}
+            </div>
+        </div>
+    }
+}
+
+
+
 fn main() {
-    stdweb::initialize();
-    let f: i32 = factorial(5);
-
-    js! {
-        alert(@{f});
+    yew::initialize();
+    let mut app = App::new();
+    let context = Context {};
+    let model = State {
+        v: String::from("1"),
     };
-
-    stdweb::event_loop();
+    app.mount(context, model, update, view);
+yew::run_loop();
 }
