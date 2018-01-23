@@ -2,6 +2,9 @@ use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::usize;
 
+#[macro_use]
+extern crate stdweb;
+
 #[derive(Copy, Clone, Eq, PartialEq)]
 struct State {
     cost: usize,
@@ -77,7 +80,9 @@ fn shortest_path(adj_list: &Vec<Vec<Edge>>, start: usize, goal: usize) -> Option
 }
 
 fn main() {
-    // This is the directed graph we're going to use.
+    stdweb::initialize();
+
+        // This is the directed graph we're going to use.
     // The node numbers correspond to the different states,
     // and the edge weights symbolize the cost of moving
     // from one node to another.
@@ -114,12 +119,12 @@ fn main() {
         // Node 4
         vec![]];
 
-    assert_eq!(shortest_path(&graph, 0, 1), Some(1));
-    assert_eq!(shortest_path(&graph, 0, 3), Some(3));
-    assert_eq!(shortest_path(&graph, 3, 0), Some(7));
-    assert_eq!(shortest_path(&graph, 0, 4), Some(5));
-    assert_eq!(shortest_path(&graph, 4, 0), None);
     if let Some(v) = shortest_path(&graph, 0, 4) {
-        println!("shortest was {}", v);
+        js! {
+            alert( @{v.to_string()} );
+
+        };
     }
+
+    stdweb::event_loop();
 }
