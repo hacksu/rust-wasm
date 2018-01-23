@@ -12,5 +12,34 @@ it. We're be playing with Rust today, because it's one of the easier ones to get
 * Set rust to nightly (might be a theme) `rustup default nightly`
 * Enable the WASM target `rustup target add wasm32-unknown-unknown`
 * `cargo new --bin wasm-maze`
+* `cd wasm-maze`
 * `cargo install cargo-web`
-* Add 
+* Add `rustup target add wasm32-unknown-unknown`
+
+## Make the code
+
+* Open up `Cargo.toml` and add `stdweb = "0.3.0"`
+* Open up `src/main.rs`
+    #[macro_use]
+    extern crate stdweb;
+
+    fn factorial(f: i32) -> i32 {
+        if f <= 1 {
+            return 1;
+        } else {
+            return factorial(f-1) * f;
+        }
+    }
+
+
+    fn main() {
+        stdweb::initialize();
+        let f: i32 = factorial(5);
+
+        js! {
+            alert(@{f});
+        };
+
+        stdweb::event_loop();
+    }
+* 
